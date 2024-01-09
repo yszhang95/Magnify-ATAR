@@ -33,7 +33,6 @@ void test_data() {
     xtemp.push_back(i * 0.001);
     ytemp.push_back(i * 0.001);
     ztemp.push_back(i * 0.12);
-    std::cout << ztemp.back() << "\n";
     dedxtemp.push_back(20 * 3.8);
   }
   x.push_back(xtemp);
@@ -51,8 +50,6 @@ void test_data() {
     ytemp.push_back(y.at(0).back() - i * 0.1);
     ztemp.push_back(z.at(0).back() + i * 0.12);
     dedxtemp.push_back(3.8);
-
-        std::cout << ztemp.back() << "\n";
   }
   for (int i = 0; i < 25; ++i) {
     xtemp.push_back(xtemp.back() - 0.1);
@@ -85,12 +82,19 @@ void test_data() {
 int main(int argc, char** argv)
 {
   std::cout << "[INFO] Starting Magnify-ATAR\n";
-  test_data();
+  if (argc > 2) {
+    std::cerr << "[ERROR] Multiple input files are given."
+      " Only the first one will be read.\n";
+  }
+  if (argc == 1) {
+    test_data();
+  }
+  const std::string input = argc == 1 ? "output.root" : argv[1];
 
   TApplication theApp("App", &argc, argv);
 
   GuiController *gc = new GuiController(gClient->GetRoot(), 1600, 900,
-                                        "output.root");
+                                        input.c_str());
   theApp.Run();
   return 0;
 }

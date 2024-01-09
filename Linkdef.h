@@ -11,4 +11,6 @@
 #pragma link C++ class MainWindow+;
 #pragma link C++ class ControlWindow + ;
 
+#pragma link C++ class std::vector<std::vector<float > >;
+
 #endif

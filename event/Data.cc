@@ -44,7 +44,7 @@ void Data::LoadData(const char* filename)
       fLegs[i] = nullptr;
     }
 
-    cout << "loading " << filename << endl;
+    std::cout << "[INFO] Loading " << filename << ".\n";
     tAtarHits_ = rootFile->Get<TTree>("atarHits");
     tAtarHits_->SetBranchAddress("np", &fAtarHit.np);
     tAtarHits_->SetBranchAddress("pdgid", fAtarHit.pdgid);
@@ -53,7 +53,6 @@ void Data::LoadData(const char* filename)
     tAtarHits_->SetBranchAddress("z", &fAtarHit.z);
     tAtarHits_->SetBranchAddress("dedx", &fAtarHit.dedx);
     tAtarHits_->GetEntry(0);
-    std::cout << fAtarHit.np << std::endl;
 }
 
 void Data::DrawAtarHits(int ipad)
