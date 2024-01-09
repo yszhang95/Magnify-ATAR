@@ -19,6 +19,7 @@ public:
 
     void InitConnections();
     void HandleMenu(int id);
+  void DoExit();
     // void ClusterChanged(int i);
     // void ClusterIdChanged(int i);
     // // void ZRangeChanged();
@@ -33,7 +34,7 @@ public:
     void Play();
     void ClusterChanged(int i);
     void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject* selected);
-    
+
     MainWindow *mw;
     ViewWindow *vw;
     ControlWindow *cw;

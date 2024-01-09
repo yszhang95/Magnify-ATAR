@@ -38,3 +38,9 @@ test/
 old/
 *.pcm
 .vscode/
+
+**/AutoDict*.cxx
+
+**/build/
+**/compile_commands.json
+**/.cache/

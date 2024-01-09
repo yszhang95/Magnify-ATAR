@@ -58,7 +58,12 @@ GuiController::~GuiController()
 
 void GuiController::InitConnections()
 {
-    mw->fMenuFile->Connect("Activated(int)", "GuiController", this, "HandleMenu(int)");
+  mw->fMenuFile->Connect("Activated(int)", "GuiController", this,
+                         "HandleMenu(int)");
+
+  mw->Connect("CloseWindow()", "GuiController", this, "DoExit()");
+  mw->DontCallClose();
+
 
     // cw->clusterEntry->SetLimitValues(0, data->nCluster-1);
     cw->clusterEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ClusterChanged(int)");
@@ -126,3 +131,7 @@ void GuiController::HandleMenu(int id)
     }
 }
 
+void GuiController::DoExit()
+{
+  gApplication->Terminate(0);
+}
