@@ -26,10 +26,11 @@ target_include_directories(AtarEventViewer PUBLIC
   ${PROJECT_SOURCE_DIR}/event
   ${PROJECT_SOURCE_DIR}/viewer)
 target_link_libraries(AtarEventViewer PUBLIC
- ROOT::Core ROOT::Gui ROOT::Tree ROOT::RIO)
+ ROOT::Core ROOT::Gui ROOT::Tree ROOT::RIO ROOT::Graf3d)
 
 add_executable(magnify-atar main.cc)
 target_link_libraries(magnify-atar AtarEventViewer
+  ROOT::Graf3d ROOT::Gui
   ROOT::Core ROOT::Tree ROOT::RIO)
 
 

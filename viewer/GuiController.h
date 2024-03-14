@@ -29,10 +29,11 @@ public:
     // void ToggleDrawTrack();
     // void ToggleAllCluster();
     // void UnZoom();
-    // void RangeZoom();
+  void RangeZoom();
     // void SetRangeEntries();
     void Play();
     void ClusterChanged(int i);
+  void ToggleAllCluster();
     void ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject* selected);
 
     MainWindow *mw;

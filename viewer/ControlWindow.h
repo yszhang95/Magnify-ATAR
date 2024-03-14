@@ -28,12 +28,10 @@ public:
     TGCheckButton *allClusterButton;
     TGTextButton  *unZoomButton;
 
-    TGNumberEntry *minEntry[4];
-    TGNumberEntry *maxEntry[4];
+    TGNumberEntry *minEntry[5];
+    TGNumberEntry *maxEntry[5];
     TGCheckButton *keepRangeButton;
     TGTextButton  *rangeZoomButton;
-
-
 
     ClassDef(ControlWindow, 0)
 };

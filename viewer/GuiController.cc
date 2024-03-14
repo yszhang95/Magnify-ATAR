@@ -47,13 +47,17 @@ GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn)
 
     InitConnections();
 
-    data->Draw1();
-
+    data->DrawHitXYvsT(1);
+    data->DrawHitXZvsT(2);
+    data->DrawHitYZvsT(3);
+    data->DrawHitXYvsDE(4);
+    data->DrawHitXZvsDE(5);
+    data->DrawHitYZvsDE(6);
 }
 
 GuiController::~GuiController()
 {
-    // gApplication->Terminate(0);
+  gApplication->Terminate(0);
 }
 
 void GuiController::InitConnections()
@@ -65,21 +69,22 @@ void GuiController::InitConnections()
   mw->DontCallClose();
 
 
-    // cw->clusterEntry->SetLimitValues(0, data->nCluster-1);
-    cw->clusterEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ClusterChanged(int)");
+  cw->clusterEntry->SetLimitValues(0, data->GetNCluster()-1);
+  cw->clusterEntry->Connect("ValueSet(Long_t)", "GuiController", this,
+                            "ClusterChanged(int)");
 
-    // cw->clusterIdEntry->SetNumber(data->rec_cluster_id->at(currentCluster));
-    // cw->clusterIdEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ClusterIdChanged(int)");
+  // cw->clusterIdEntry->SetNumber(data->rec_cluster_id->at(currentCluster));
+  // cw->clusterIdEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ClusterIdChanged(int)");
 
-    // cw->pointIndexEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ZoomChanged()");
+  // cw->pointIndexEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ZoomChanged()");
 
-    // cw->zoomEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ZoomChanged()");
-    // cw->badChanelButton->Connect("Clicked()", "GuiController", this, "ToggleBadChannel()");
-    // cw->drawTrackButton->Connect("Clicked()", "GuiController", this, "ToggleDrawTrack()");
-    // cw->allClusterButton->Connect("Clicked()", "GuiController", this, "ToggleAllCluster()");
+  // cw->zoomEntry->Connect("ValueSet(Long_t)", "GuiController", this, "ZoomChanged()");
+  // cw->badChanelButton->Connect("Clicked()", "GuiController", this, "ToggleBadChannel()");
+  // cw->drawTrackButton->Connect("Clicked()", "GuiController", this, "ToggleDrawTrack()");
+  cw->allClusterButton->Connect("Clicked()", "GuiController", this, "ToggleAllCluster()");
 
     cw->unZoomButton->Connect("Clicked()", "GuiController", this, "Play()");
-    // cw->rangeZoomButton->Connect("Clicked()", "GuiController", this, "RangeZoom()");
+    cw->rangeZoomButton->Connect("Clicked()", "GuiController", this, "RangeZoom()");
 
     vw->can->Connect(
         "ProcessedEvent(Int_t,Int_t,Int_t,TObject*)",
@@ -111,14 +116,54 @@ void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject* sele
 
 void GuiController::ClusterChanged(int i)
 {
-    int n = cw->clusterEntry->GetNumber();
-    data->Draw1(n);
-    cout << "n changed to " << n << endl;
+  int n = cw->clusterEntry->GetNumber();
+  data->SetClusterIdx(n);
+
+  cw->allClusterButton->SetState(kButtonUp, kTRUE);
+
+  data->DrawHitXYvsT(1);
+  data->DrawHitXZvsT(2);
+  data->DrawHitYZvsT(3);
+  data->DrawHitXYvsDE(4);
+  data->DrawHitXZvsDE(5);
+  data->DrawHitYZvsDE(6);
+}
+
+void GuiController::ToggleAllCluster()
+{
+  data->SetDrawAll(cw->allClusterButton->IsDown());
+  data->DrawHitXYvsT(1);
+  data->DrawHitXZvsT(2);
+  data->DrawHitYZvsT(3);
+  data->DrawHitXYvsDE(4);
+  data->DrawHitXZvsDE(5);
+  data->DrawHitYZvsDE(6);
+}
+
+void GuiController::RangeZoom()
+{
+  data->SetTMin(cw->minEntry[0]->GetNumber());
+  data->SetTMax(cw->maxEntry[0]->GetNumber());
+  data->SetDEMin(cw->minEntry[1]->GetNumber());
+  data->SetDEMax(cw->maxEntry[1]->GetNumber());
+  data->SetXMin(cw->minEntry[2]->GetNumber());
+  data->SetXMax(cw->maxEntry[2]->GetNumber());
+  data->SetYMin(cw->minEntry[3]->GetNumber());
+  data->SetYMax(cw->maxEntry[3]->GetNumber());
+  data->SetZMin(cw->minEntry[4]->GetNumber());
+  data->SetZMax(cw->maxEntry[4]->GetNumber());
+
+  data->DrawHitXYvsT(1);
+  data->DrawHitXZvsT(2);
+  data->DrawHitYZvsT(3);
+  data->DrawHitXYvsDE(4);
+  data->DrawHitXZvsDE(5);
+  data->DrawHitYZvsDE(6);
 }
 
 void GuiController::Play()
 {
-    cout << "chao clicked this button" << endl;
+  cout << "chao clicked this button" << endl;
 }
 
 
