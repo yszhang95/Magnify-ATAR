@@ -82,8 +82,8 @@ ControlWindow::ControlWindow(const TGWindow *p, int w, int h)
 
     const int groupid[5] = {1, 1, 0, 0, 0};
     const TString str[5] = {"time: ", "dE: ", "X: ", "Y: ", "Z: "};
-    const double min_val[5] = {-300, 0, -1.5, -1.5, -1.};
-    const double max_val[5] = {1500, 100, 1.5, 1.5, 7.};
+    const double min_val[5] = {0, 0, -15, -15, -5};
+    const double max_val[5] = {1500, 100, 15, 15, 10};
 
     for (unsigned int i = 0; i < 5; i++) {
       group_range->AddFrame(

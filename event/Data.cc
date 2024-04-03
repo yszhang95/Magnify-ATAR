@@ -43,7 +43,7 @@ Float_t Data::HitInfo::GetVal(std::string var, size_t i, size_t j)
 }
 
 Data::Data()
-    : fXMin(-1.5), fXMax(1.5), fYMin(-1.5), fYMax(1.5), fZMin(-1), fZMax(7),
+    : fXMin(-15), fXMax(15), fYMin(-15), fYMax(15), fZMin(-2), fZMax(7),
       fTMin(0), fTMax(2800), fDEMin(0), fDEMax(10), fNCluster(0), fClusterIdx(0), fDrawAll(true)
 {
   c1 = 0;
@@ -71,7 +71,7 @@ void Data::LoadData(const char* filename)
     }
 
     std::cout << "[INFO] Loading " << filename << ".\n";
-    tAtarHits_ = rootFile->Get<TTree>("atarHits");
+    tAtarHits_ = rootFile->Get<TTree>("rec_hits");
     tAtarHits_->SetBranchAddress("ncluster", &fAtarHit.ncluster);
     tAtarHits_->SetBranchAddress("clusterid", fAtarHit.clusterid);
     tAtarHits_->SetBranchAddress("x", &fAtarHit.x);
