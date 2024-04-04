@@ -6,6 +6,8 @@
 #include <vector>
 #include <map>
 #include "TColor.h"
+#include "Math/Point3Dfwd.h"
+#include "Math/Vector3Dfwd.h"
 
 class TFile;
 class TCanvas;
@@ -60,6 +62,7 @@ public:
   void DrawHitXYvsDE(int);
   void DrawHitXZvsDE(int);
   void DrawHitYZvsDE(int);
+  void Draw3D(int);
   // void DrawAll();
 
   const unsigned int GetNCluster() const { return fNCluster; }
@@ -75,6 +78,8 @@ private:
   // void DrawNTuple();
 
   HitInfo fAtarHit;
+  ROOT::Math::XYZPoint* fEStart;
+  ROOT::Math::Polar3DVector* fEDirection;
   TLegend *fLegs[20];
 
   Double_t fXMin;

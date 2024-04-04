@@ -12,6 +12,9 @@
 #include "TROOT.h"
 #include "TTree.h"
 #include "TPolyMarker3D.h"
+#include "TMath.h"
+#include "Math/Vector3D.h"
+#include "Math/Point3D.h"
 
 #include <TError.h>
 #include <algorithm>
@@ -43,7 +46,7 @@ Float_t Data::HitInfo::GetVal(std::string var, size_t i, size_t j)
 }
 
 Data::Data()
-    : fXMin(-15), fXMax(15), fYMin(-15), fYMax(15), fZMin(-2), fZMax(7),
+    : fEStart(0), fEDirection(0), fXMin(-15), fXMax(15), fYMin(-15), fYMax(15), fZMin(-2), fZMax(7),
       fTMin(0), fTMax(2800), fDEMin(0), fDEMax(10), fNCluster(0), fClusterIdx(0), fDrawAll(true)
 {
   c1 = 0;
@@ -79,6 +82,8 @@ void Data::LoadData(const char* filename)
     tAtarHits_->SetBranchAddress("z", &fAtarHit.z);
     tAtarHits_->SetBranchAddress("t", &fAtarHit.t);
     tAtarHits_->SetBranchAddress("de", &fAtarHit.de);
+    tAtarHits_->SetBranchAddress("estart", &fEStart);
+    tAtarHits_->SetBranchAddress("edirection", &fEDirection);
     tAtarHits_->GetEntry(0);
 
     fNCluster = fAtarHit.ncluster;
@@ -169,6 +174,76 @@ void Data::DrawPoints(int ipad, const std::string x, const std::string y,
   }
   pad->SetTheta(90-0.0001);
   pad->SetPhi(0+0.0001);
+  pad->SetGridx();
+  pad->SetGridy();
+  pad->Modified();
+  pad->Update();
+}
+
+void Data::Draw3D(int ipad) {
+
+  TVirtualPad *pad = c1->cd(ipad);
+  if (fLegs[ipad]) delete fLegs[ipad];
+  fLegs[ipad] = new TLegend(0.75, 0.9 - 0.06 * fAtarHit.ncluster, 0.9, 0.9);
+
+  std::vector<TGraph2D*> graphs;
+
+  for (int i = 0; i < fAtarHit.ncluster; ++i) {
+    const auto npts = fAtarHit.x->at(i).size();
+    std::string name = ::Form("hHitXYvsZ_idx%d", i);
+    TGraph2D *g = (TGraph2D*)gROOT->FindObject(name.c_str());
+    if (g) {
+      delete g;
+    }
+
+    const bool notselected = !fDrawAll && i != fClusterIdx;
+    if (npts == 0 || notselected) {
+      g = nullptr;
+    } else {
+      g = new TGraph2D(npts);
+      g->SetName(name.c_str());
+      for (size_t j = 0; j < npts; ++j) {
+        g->SetPoint(j, fAtarHit.GetVal("X", i, j), fAtarHit.GetVal("Y", i, j),
+                    fAtarHit.GetVal("Z", i, j));
+        // set minimum and maximum must be called before set limits...
+        g->SetMinimum(GetMin("Z"));
+        g->SetMaximum(GetMax("Z"));
+        g->GetXaxis()->SetLimits(GetMin("X"), GetMax("X"));
+        g->GetYaxis()->SetLimits(GetMin("Y"), GetMax("Y"));
+      }
+    }
+    graphs.push_back(g);
+  }
+  bool framed = false;
+  for (const auto g : graphs) {
+    if (g) {
+      if (framed) {
+        g->Draw("P SAME");
+      } else {
+        g->Draw("P");
+        g->SetTitle("XYZ;X(mm);Y(mm);Z(mm)");
+        framed = true;
+      }
+    }
+  }
+
+  TGraph2D* edirection = (TGraph2D*) gROOT->FindObject("edirection");
+  if (edirection) delete edirection;
+  edirection = new TGraph2D(1000);
+  edirection->SetName("edirection");
+  ROOT::Math::XYZVector v(GetMin("X")-GetMax("X"),
+          GetMax("Y") - GetMin("Y"), GetMin("Z") - GetMax("Z"));
+  const double step = v.R()/5000;
+  for (int i=0; i<1000; ++i) {
+      double p[3];
+      p[0] = fEStart->X() + step * TMath::Cos(fEDirection->Phi()) * TMath::Sin(fEDirection->Theta()) * i;
+      p[1] = fEStart->Y() + step * TMath::Sin(fEDirection->Phi()) * TMath::Sin(fEDirection->Theta()) * i;
+      p[2] = fEStart->Z() + step *  TMath::Cos(fEDirection->Theta()) * i;
+      edirection->SetPoint(i, p[0], p[1], p[2]);
+  }
+  edirection->SetLineColor(kRed);
+  edirection->Draw("LINE SAME");
+
   pad->SetGridx();
   pad->SetGridy();
   pad->Modified();

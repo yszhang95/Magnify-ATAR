@@ -53,6 +53,7 @@ GuiController::GuiController(const TGWindow *p, int w, int h, const char* fn)
     data->DrawHitXYvsDE(4);
     data->DrawHitXZvsDE(5);
     data->DrawHitYZvsDE(6);
+    data->Draw3D(7);
 }
 
 GuiController::~GuiController()
@@ -107,10 +108,10 @@ void GuiController::ProcessCanvasEvent(Int_t ev, Int_t x, Int_t y, TObject* sele
         double yy = pad->AbsPixeltoY(y);
         // int ci = data->FindClusterIndex(xx, yy);
         // int pi = data->FindPointIndex(xx, yy);
-        cout << "pad " << padNo << ": (" << xx << ", " << yy << ")" 
+        // cout << "pad " << padNo << ": (" << xx << ", " << yy << ")" 
             // << "; cluster index: " << ci
             // << "; point index: " << pi
-            << endl;
+        //    << endl;
     }
 }
 
@@ -127,6 +128,8 @@ void GuiController::ClusterChanged(int i)
   data->DrawHitXYvsDE(4);
   data->DrawHitXZvsDE(5);
   data->DrawHitYZvsDE(6);
+
+    data->Draw3D(7);
 }
 
 void GuiController::ToggleAllCluster()
@@ -138,6 +141,8 @@ void GuiController::ToggleAllCluster()
   data->DrawHitXYvsDE(4);
   data->DrawHitXZvsDE(5);
   data->DrawHitYZvsDE(6);
+
+    data->Draw3D(7);
 }
 
 void GuiController::RangeZoom()
@@ -159,11 +164,12 @@ void GuiController::RangeZoom()
   data->DrawHitXYvsDE(4);
   data->DrawHitXZvsDE(5);
   data->DrawHitYZvsDE(6);
+
+    data->Draw3D(7);
 }
 
 void GuiController::Play()
 {
-  cout << "chao clicked this button" << endl;
 }
 
 
